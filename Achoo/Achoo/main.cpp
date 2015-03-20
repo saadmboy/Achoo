@@ -7,9 +7,27 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+/*
+ Store diesases as roots and symptoms as children
+ AND
+ Store symtoms as roots and diseases as children
+ */
+
+bool loadFromFile(char * fileName);
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    
     return 0;
 }
+
+
+
+
+
+
+

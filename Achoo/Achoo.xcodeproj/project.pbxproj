@@ -232,6 +232,7 @@
 				93BD0A021AAD4DE1005A61A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
