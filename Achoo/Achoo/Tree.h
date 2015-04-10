@@ -2,13 +2,26 @@
 //  Tree.h
 //  Achoo
 //
-//  Created by Saad K on 3/12/15.
+//  Created by Saad K on 3/10/15.
 //  Copyright (c) 2015 Saad K. All rights reserved.
 //
+#include <iostream>
+#include <string>
+#include <vector>
 
-#ifndef __Achoo__Tree__
-#define __Achoo__Tree__
+using namespace std;
 
-#include <stdio.h>
+struct TreeNode {
+    string data;
+    TreeNode *Lchild;
+    TreeNode *Rchild;
+};
 
-#endif /* defined(__Achoo__Tree__) */
+class Tree{
+public:
+    TreeNode * Root;
+    Tree(){
+        Root = NULL;
+    }
+    TreeNode* insertNode(string s);
+};
