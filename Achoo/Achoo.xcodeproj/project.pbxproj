@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		936838821AD71B2900437E1F /* Structs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936838811AD71B2900437E1F /* Structs.cpp */; };
 		93BD09FD1AAD4DE1005A61A4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93BD09FC1AAD4DE1005A61A4 /* main.cpp */; };
+		93F02C1B1AB261230029BF8E /* Tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F02C191AB261230029BF8E /* Tree.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +25,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		936838811AD71B2900437E1F /* Structs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Structs.cpp; sourceTree = "<group>"; };
+		939638471AD74ED2004A27EE /* Tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
 		93BD09F91AAD4DE1005A61A4 /* Achoo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Achoo; sourceTree = BUILT_PRODUCTS_DIR; };
 		93BD09FC1AAD4DE1005A61A4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		93F02C191AB261230029BF8E /* Tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tree.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +62,10 @@
 		93BD09FB1AAD4DE1005A61A4 /* Achoo */ = {
 			isa = PBXGroup;
 			children = (
+				936838811AD71B2900437E1F /* Structs.cpp */,
 				93BD09FC1AAD4DE1005A61A4 /* main.cpp */,
+				939638471AD74ED2004A27EE /* Tree.h */,
+				93F02C191AB261230029BF8E /* Tree.cpp */,
 			);
 			path = Achoo;
 			sourceTree = "<group>";
@@ -118,6 +126,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				936838821AD71B2900437E1F /* Structs.cpp in Sources */,
+				93F02C1B1AB261230029BF8E /* Tree.cpp in Sources */,
 				93BD09FD1AAD4DE1005A61A4 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
