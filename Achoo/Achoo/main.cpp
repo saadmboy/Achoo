@@ -21,10 +21,11 @@
 
 using namespace std;
 
-//template <class T, class U>
-bool loadFromFile(char * fileName, Tree<Disease> * diseasesTree, Tree<Symptom> * symptomsTree);
+
+bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symptom> * symptomsTree);
 vector<string> &split(const string &s, char delim, vector<string> &elems);
 vector<string> split(const string &s, char delim);
+
 /*
  Store diesases as roots and symptoms as children
  AND
@@ -45,16 +46,54 @@ vector<string> split(const string &s, char delim);
 
 
 int main(int argc, const char * argv[]) {
-    Tree<Disease> * diseases;
-    Tree<Symptom> *symptoms;
+    AVLtree<Disease> * diseases;
+    AVLtree<Symptom> *symptoms;
     
-    diseases = new Tree<Disease>();
-    symptoms = new Tree<Symptom>();
+    diseases = new AVLtree<Disease>();
+    symptoms = new AVLtree<Symptom>();
     
     loadFromFile("/Users/Saad/Desktop/achoo/Scraper/diseases.txt", diseases, symptoms);
     
+    string input = "";
+    cout << "q to quit\ns to search symptoms\nd to search diseases\n";
+    while (input != "q") {
+        getline(cin,input);
+        if(input == "s"){
+            cout << "Please type the search term: "<<endl;
+            string toS = "";
+            getline(cin, toS);
+            AVLnode<Symptom> * search =symptoms->search(toS, symptoms->root);
+            if(search)
+                cout << search->key.disease << endl;
+            else
+                cout << toS << " was not found\n";
+        }else if(input == "d"){
+            cout << "Please type the search term: " <<endl;
+            string toS = "";
+            getline(cin, toS);
+            AVLnode<Disease> * search =diseases->search(toS, diseases->root);
+            if(search)
+                cout << search->key.symptoms.size() << endl;
+            else
+                cout << toS << " was not found\n";
+        }else{
+            cout << "invalid command\n";
+        }
+    }
     
-    cout << "a";
+    
+    //diseases->display(diseases->root, 1);
+    FILE * pFile;
+    pFile = fopen ("/Users/Saad/Desktop/diseases.gv" , "w+");
+    diseases->print_DOT(pFile);
+    //system("dot -Tpng /Users/Saad/Desktop/diseases.gv -o /Users/Saad/Desktop/diseases.png");
+    fclose(pFile);
+    
+    pFile = fopen ("/Users/Saad/Desktop/symptoms.gv" , "w+");
+    symptoms->print_DOT(pFile);
+    //system("dot -Tpng /Users/Saad/Desktop/symptoms.gv -o /Users/Saad/Desktop/symptoms.png");
+    fclose(pFile);
+    
     delete diseases;
     delete symptoms;
     return 0;
@@ -62,8 +101,7 @@ int main(int argc, const char * argv[]) {
 
 
 
-//template <class T, class U>
-bool loadFromFile(char * fileName, Tree<Disease> * diseasesTree, Tree<Symptom> * symptomsTree){
+bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symptom> * symptomsTree){
 
     if(symptomsTree == NULL || diseasesTree == NULL || fileName == NULL)
         return false;
@@ -83,8 +121,6 @@ bool loadFromFile(char * fileName, Tree<Disease> * diseasesTree, Tree<Symptom> *
     while (in.peek() != EOF) {
         count++;
         getline(in, temp, '\n');
-        //cout << count << ": " << temp << endl;
-        int firstLetter = tolower(temp[0]);
         
         //FROM: http://stackoverflow.com/questions/236129/split-a-string-in-c
         istringstream iss(temp);
@@ -93,27 +129,20 @@ bool loadFromFile(char * fileName, Tree<Disease> * diseasesTree, Tree<Symptom> *
         Disease * d;
         d = new Disease;
         d->name = symptoms[0];
-        cout << endl << count << ": " << d->name << endl;
+        //cout << endl << count << ": " << d->name << endl;
         vector<Symptom * > symptomsVector;
         for(int i = 1; i < symptoms.size(); i++){// i=0 == the disease name
-            cout << symptoms[i] << endl;
+            //cout << symptoms[i] << endl;
             Symptom * s;
             s = new Symptom;
             s->name = symptoms[i];
             s->disease = d;
             symptomsVector.push_back(s);
-            symptomsTree->insertNode(symptomsTree->Root, *s);
-            //(*symptomsTree).insertNode(s);
+            symptomsTree->insert(*s);
         }
         d->symptoms = symptomsVector;
-        //(*diseasesTree).insertNode(d);
-       // diseasesTree->insertNode(d);
-        diseasesTree->insertNode(diseasesTree->Root, *d);
+        diseasesTree->insert(*d);
 
-        if(count == 5){
-            symptomsTree->display(symptomsTree->Root, 1);
-            return true;
-        }
             
     }
     
@@ -137,8 +166,6 @@ vector<string> split(const string &s, char delim){
     split(s, delim, elems);
     return elems;
 }
-
-
 
 
 
