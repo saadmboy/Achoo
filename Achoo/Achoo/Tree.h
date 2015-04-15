@@ -44,10 +44,9 @@ public:
     ~AVLtree(void);
     bool insert(T key);
     void display(AVLnode<T> *ptr, int level);
-    void bst_print_dot_null(T key, int nullcount, FILE* stream);
-    void bst_print_dot_aux(AVLnode<T>* node, FILE* stream);
+    AVLnode<T> * search(const string& s, AVLnode<T> *& tree);
+    
     void print_DOT(FILE* stream);
-    AVLnode<T> * search(const std::string& s, AVLnode<T> *& tree);
 private:
     AVLnode<T>* rotateLeft (AVLnode<T> *);
     AVLnode<T>* rotateRight (AVLnode<T> *);
@@ -57,6 +56,8 @@ private:
     int height (AVLnode<T> *);
     void preOrder(ostream &out, AVLnode<T>* pre);
     string dot();
+    void bst_print_dot_null(T key, int nullcount, FILE* stream);
+    void bst_print_dot_aux(AVLnode<T>* node, FILE* stream);
 };
 
 
