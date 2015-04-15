@@ -44,7 +44,7 @@ int main(int argc, const char * argv[]) {
     while (input != "q") {
         getline(cin,input);
         if(input == "s"){
-            cout << "Please type the search term: "<<endl;
+            cout << "Please type the symptom term: "<<endl;
             string toS = "";
             getline(cin, toS);
             AVLnode<Symptom> * search =symptoms->search(toS, symptoms->root);
@@ -53,14 +53,17 @@ int main(int argc, const char * argv[]) {
             else
                 cout << toS << " was not found\n";
         }else if(input == "d"){
-            cout << "Please type the search term: " <<endl;
+            cout << "Please type the disease term: " <<endl;
             string toS = "";
             getline(cin, toS);
             AVLnode<Disease> * search =diseases->search(toS, diseases->root);
-            if(search)
-                cout << search->key.symptoms.size() << endl;
-            else
+            if(search){
+                cout << "Found " << toS << " with "<< search->key.symptoms.size() << " symptoms: " << endl;
+                for(Symptom * s: search->key.symptoms)
+                    cout << "\t" << s->name<< endl;
+            }else{
                 cout << toS << " was not found\n";
+            }
         }else{
             cout << "invalid command\n";
         }
@@ -96,7 +99,7 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
         return false;
     }
     
-    int dCount, sCount = 0;//used to count
+    int dCount = 0, sCount = 0;//used to count
     clock_t t;
     t = clock();
     string temp;
@@ -109,8 +112,6 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
         istringstream iss(temp);
         
         vector<string> symptoms = split(temp, '\t');
-        if(symptoms.size() < 3)//temp debug
-            cout << "Less than three symptoms for " << symptoms[0] << endl;
         
         Disease * d;
         d = new Disease;
