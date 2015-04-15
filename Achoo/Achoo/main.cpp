@@ -47,7 +47,7 @@ int main(int argc, const char * argv[]) {
             cout << "Please type the symptom term: "<<endl;
             string toS = "";
             getline(cin, toS);
-            AVLnode<Symptom> * search =symptoms->search(toS, symptoms->root);
+            AVLnode<Symptom> * search =symptoms->completeSearch(toS, symptoms->root);
             if(search)
                 cout << search->key.disease << endl;
             else
@@ -56,7 +56,7 @@ int main(int argc, const char * argv[]) {
             cout << "Please type the disease term: " <<endl;
             string toS = "";
             getline(cin, toS);
-            AVLnode<Disease> * search =diseases->search(toS, diseases->root);
+            AVLnode<Disease> * search =diseases->completeSearch(toS, diseases->root);
             if(search){
                 cout << "Found " << toS << " with "<< search->key.symptoms.size() << " symptoms: " << endl;
                 for(Symptom * s: search->key.symptoms)

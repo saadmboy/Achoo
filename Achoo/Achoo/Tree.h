@@ -43,9 +43,8 @@ public:
     AVLtree(void);
     ~AVLtree(void);
     bool insert(T key);
-    void display(AVLnode<T> *ptr, int level);
-    AVLnode<T> * search(const string& s, AVLnode<T> *& tree);
-    
+    void display(AVLnode<T> *, int);
+    AVLnode<T> * completeSearch(string&, AVLnode<T> *&);
     void print_DOT(FILE* stream);
 private:
     AVLnode<T>* rotateLeft (AVLnode<T> *);

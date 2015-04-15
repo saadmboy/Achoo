@@ -160,25 +160,22 @@ bool AVLtree<T>::insert(T key) {
     return true;
 }
 
+
+/**
+ * Recursively searches the tree for the param s
+ * @return the node with the key = s
+**/
 template <class T>
-AVLnode<T> * AVLtree<T>::search(const std::string& s, AVLnode<T> *& tree)
-{
+AVLnode<T> * AVLtree<T>::completeSearch(string& s, AVLnode<T> *& tree) {
     if(tree == NULL)
-    {
         return NULL;
-    }
-    else if(s < tree->key.name)
-    {
-        return search(s, tree->left);
-    }
-    else if(tree->key.name < s)
-    {
-        return search(s, tree->right);
-    }
-    else
-    {
+    
+    if(tolower(*s.c_str()) < tolower(*tree->key.name.c_str()))
+        return completeSearch(s, tree->left);
+    if(tolower(*s.c_str()) > tolower(*tree->key.name.c_str()))
+        return completeSearch(s, tree->right);
+    else //(if tree->key.name === s)
         return tree;
-    }
 }
 
 
