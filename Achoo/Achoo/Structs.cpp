@@ -21,6 +21,7 @@ struct Disease{
     string name;
     vector<Symptom *> symptoms;
 };
+
 struct Symptom{
     string name;
     Disease *disease;

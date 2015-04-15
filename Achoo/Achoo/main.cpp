@@ -7,6 +7,7 @@
 //
 
 #include <stdio.h>
+#include <time.h>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
@@ -23,37 +24,21 @@ using namespace std;
 
 
 bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symptom> * symptomsTree);
+template<class T>
+void createPictureFromTree(char *, AVLtree<T> *);
 vector<string> &split(const string &s, char delim, vector<string> &elems);
 vector<string> split(const string &s, char delim);
 
-/*
- Store diesases as roots and symptoms as children
- AND
- Store symtoms as roots and diseases as children
- */
-
-/*
-    Sample Run:
-        Enter symptom: i have a headace
-        0 *remove I, have, etc from input
-        1 *loop through symtoms tree and find the symtom that contains input*
-        2 *get disease name from tree*
-        3 *find disease in symtoms array*
-        4 *ask user if he displays other symptoms from that disease*
-            if yes: diagnose
-            if not: find next symtom from tree. (1)
-*/
-
-
 int main(int argc, const char * argv[]) {
-    AVLtree<Disease> * diseases;
-    AVLtree<Symptom> *symptoms;
-    
+    AVLtree<Disease> * diseases;//create diseases tree
+    AVLtree<Symptom> *symptoms;//create symptoms tree
     diseases = new AVLtree<Disease>();
     symptoms = new AVLtree<Symptom>();
     
+    //populates the tree with the contents from the following file
     loadFromFile("/Users/Saad/Desktop/achoo/Scraper/diseases.txt", diseases, symptoms);
     
+    //temporary menu for debugging
     string input = "";
     cout << "q to quit\ns to search symptoms\nd to search diseases\n";
     while (input != "q") {
@@ -83,16 +68,10 @@ int main(int argc, const char * argv[]) {
     
     
     //diseases->display(diseases->root, 1);
-    FILE * pFile;
-    pFile = fopen ("/Users/Saad/Desktop/diseases.gv" , "w+");
-    diseases->print_DOT(pFile);
-    //system("dot -Tpng /Users/Saad/Desktop/diseases.gv -o /Users/Saad/Desktop/diseases.png");
-    fclose(pFile);
     
-    pFile = fopen ("/Users/Saad/Desktop/symptoms.gv" , "w+");
-    symptoms->print_DOT(pFile);
-    //system("dot -Tpng /Users/Saad/Desktop/symptoms.gv -o /Users/Saad/Desktop/symptoms.png");
-    fclose(pFile);
+    createPictureFromTree("/Users/Saad/Desktop/diseases.gv", diseases);
+    
+    createPictureFromTree("/Users/Saad/Desktop/symptoms.gv", symptoms);
     
     delete diseases;
     delete symptoms;
@@ -100,7 +79,10 @@ int main(int argc, const char * argv[]) {
 }
 
 
-
+/**
+ * Loads the file from the scraper and adds the diseases and symptoms to the tree
+ * @return bool : params == NULL || file is invalid;
+**/
 bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symptom> * symptomsTree){
 
     if(symptomsTree == NULL || diseasesTree == NULL || fileName == NULL)
@@ -113,44 +95,50 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
         cout << "Error opening file\n";
         return false;
     }
-    int count = 0;
     
-    long start = time(0);
+    int dCount, sCount = 0;//used to count
+    clock_t t;
+    t = clock();
     string temp;
     
     while (in.peek() != EOF) {
-        count++;
+        dCount++;
         getline(in, temp, '\n');
         
         //FROM: http://stackoverflow.com/questions/236129/split-a-string-in-c
         istringstream iss(temp);
         
         vector<string> symptoms = split(temp, '\t');
+        if(symptoms.size() < 3)//temp debug
+            cout << "Less than three symptoms for " << symptoms[0] << endl;
+        
         Disease * d;
         d = new Disease;
         d->name = symptoms[0];
-        //cout << endl << count << ": " << d->name << endl;
         vector<Symptom * > symptomsVector;
         for(int i = 1; i < symptoms.size(); i++){// i=0 == the disease name
-            //cout << symptoms[i] << endl;
+            sCount++;
             Symptom * s;
             s = new Symptom;
             s->name = symptoms[i];
             s->disease = d;
-            symptomsVector.push_back(s);
+            symptomsVector.push_back(s);//needed for diseasesTree
             symptomsTree->insert(*s);
         }
         d->symptoms = symptomsVector;
         diseasesTree->insert(*d);
-
-            
     }
     
-    cout << "Imported " << count << " diseases in " << (time(0) - start) << " seconds\n";
+    //no delete d; because it's still store in the tree
+    
+    cout << "Imported " << dCount << " diseases and " << sCount <<" symptoms in " << float(clock() - t)/CLOCKS_PER_SEC << " seconds\n";
     return true;
 }
 
-
+/**
+ * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator
+ * Used to read and split the diseases.txt
+**/
 vector<string> &split(const string &s, char delim, vector<string> &elems){
     stringstream ss(s);
     string item;
@@ -159,14 +147,18 @@ vector<string> &split(const string &s, char delim, vector<string> &elems){
     }
     return elems;
 }
-
-
 vector<string> split(const string &s, char delim){
     vector<string> elems;
     split(s, delim, elems);
     return elems;
 }
 
-
+template <class T>
+void createPictureFromTree(char * address, AVLtree<T> * t){
+    FILE * pFile;
+    pFile = fopen ("/Users/Saad/Desktop/diseases.gv" , "w+");
+    t->print_DOT(pFile);
+    fclose(pFile);
+}
 
 

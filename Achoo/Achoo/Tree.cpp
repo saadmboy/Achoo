@@ -8,341 +8,38 @@
 
 #include "Tree.h"
 
-
 using namespace std;
 
-/*
-template <class T>
-void Tree<T>::insertNode(T * toAdd){
-    TreeNode *tmp, * newNode;
-    newNode = new TreeNode;
-    newNode->data = *toAdd;
-    newNode->Rchild = newNode->Lchild = NULL;
-    
-    if(Root == NULL){
-        Root = newNode;
-        return;
-    }else{
-        tmp = Root;
-        while(tmp != NULL){
-            //toAdd < value
-            //strcmp("aa", "ab") < 0 = true
-            
-            if(strcmp(toAdd->name.c_str(), tmp->data.name.c_str()) < 0){
-                if(tmp->Lchild){
-                    tmp = tmp->Lchild;
-                }else{
-                    tmp->Lchild = newNode;
-                }
-                break;
-            }else if (strcmp(toAdd->name.c_str(), tmp->data.name.c_str()) > 0){
-                if(tmp->Rchild){
-                    tmp = tmp->Rchild;
-                }else{
-                    tmp->Rchild = newNode;
-                }
-                break;
-            }else{
-                cout << "Duplicate value found in tree: "<< toAdd->name <<"\n";
-                break;
-            }
-        }
-    }
-    
-    return;
-}*/
-
-/*
- * Height of AVL Tree
- *
-template <class T>
-int Tree<T>::height(TreeNode<T> *temp)
-{
-    int h = 0;
-    if (temp != NULL)
-    {
-        int l_height = height (temp->Lchild);
-        int r_height = height (temp->Rchild);
-        int max_height = max (l_height, r_height);
-        h = max_height + 1;
-    }
-    return h;
-}
-
-/*
- * Height Difference
- *
-template <class T>
-int Tree<T>::diff(TreeNode<T> *temp)
-{
-    int l_height = height (temp->Lchild);
-    int r_height = height (temp->Rchild);
-    int b_factor= l_height - r_height;
-    return b_factor;
-}
-
-/*
- * Right- Right Rotation
- *
-template <class T>
-TreeNode<T> *Tree<T>::rr_rotation(TreeNode<T> *parent)
-{
-    TreeNode<T> *temp;
-    temp = parent->Rchild;
-    parent->Rchild = temp->Lchild;
-    temp->Lchild = parent;
-    return temp;
-}
-/*
- * Left- Left Rotation
- *
-template <class T>
-TreeNode<T> *Tree<T>::ll_rotation(TreeNode<T> *parent)
-{
-    TreeNode<T> *temp;
-    temp = parent->Lchild;
-    parent->Lchild = temp->Rchild;
-    temp->Rchild = parent;
-    return temp;
-}
-
-/*
- * Left - Right Rotation
- *
-template <class T>
-TreeNode<T> *Tree<T>::lr_rotation(TreeNode<T> *parent)
-{
-    TreeNode<T> *temp;
-    temp = parent->Lchild;
-    parent->Lchild = rr_rotation (temp);
-    return ll_rotation (parent);
-}
-
-/*
- * Right- Left Rotation
- *
-template <class T>
-TreeNode<T> *Tree<T>::rl_rotation(TreeNode<T> *parent)
-{
-    TreeNode<T> *temp;
-    temp = parent->Rchild;
-    parent->Rchild = ll_rotation (temp);
-    return rr_rotation (parent);
-}
-
-/*
- * Balancing AVL Tree
- *
-template <class T>
-TreeNode<T> *Tree<T>::balance(TreeNode<T> *temp)
-{
-    int bal_factor = diff (temp);
-    if (bal_factor > 1)
-    {
-        if (diff (temp->Lchild) > 0)
-            temp = ll_rotation (temp);
-        else
-            temp = lr_rotation (temp);
-    }
-    else if (bal_factor < -1)
-    {
-        if (diff (temp->Rchild) > 0)
-            temp = rl_rotation (temp);
-        else
-            temp = rr_rotation (temp);
-    }
-    if (temp->parent != NULL) {
-        balance(temp->parent);
-    }
-    else {
-        Root = temp;
-    }
-    return temp;
-}*/
-/*
-
-template <class T>
-void Tree<T>::display(TreeNode<T> *ptr, int level)
-{
-    int i;
-    if (ptr!=NULL)
-    {
-        display(ptr->Rchild, level + 1);
-        printf("\n");
-        if (ptr == Root)
-            cout<<"Root -> ";
-        for (i = 0; i < level && ptr !=Root; i++)
-            cout<<"        ";
-        cout<< ptr->data.name;
-        display(ptr->Lchild, level + 1);
-    }
-}
-template <class T>
-TreeNode<T> * Tree<T>::insertNode(TreeNode<T> *p, T toAdd){
-
-    if (p == NULL) {
-        Root = new TreeNode<T>;
-        Root->data = toAdd;
-        Root->Lchild = NULL;
-        Root->Rchild = NULL;
-        return Root;
-    } else if(strcmp(toAdd.name.c_str(), p->data.name.c_str()) < 0){
-        cout <<"< 0: " << toAdd.name << endl;
-        p->Lchild = insertNode(p->Lchild, toAdd);
-        Root = balance (p);
-        cout <<"BALANCED: " << toAdd.name << endl;
-    } else if (strcmp(toAdd.name.c_str(), p->data.name.c_str()) > 0){
-        cout <<">0: " << toAdd.name << endl;
-        p->Rchild = insertNode(p->Rchild, toAdd);
-        Root = balance (p);
-        cout <<"BALANCED: " << toAdd.name << endl;
-    }else{
-        cout <<"DUPLICATE: " << toAdd.name << endl;
-    }
-    
-    if (p == NULL) {
-        p = new TreeNode<T>;
-        p->data = toAdd;
-        p->Lchild = NULL;
-        p->Rchild = NULL;
-        return p;
-    }else{
-        
-        if(strcmp(toAdd.name.c_str(), p->data.name.c_str()) < 0){
-            p->Lchild = insertNode(p->Lchild, toAdd);
-            if(diff(p) == 2){
-                if(strcmp(toAdd.name.c_str(), p->data.name.c_str()) < 0)
-                    p = ll_rotation(p);
-                else
-                    p = lr_rotation(p);
-            }
-        } else if (strcmp(toAdd.name.c_str(), p->data.name.c_str()) > 0){
-            p->Rchild = insertNode(p->Rchild, toAdd);
-            if(diff(p) == -2){
-                if(strcmp(toAdd.name.c_str(), p->data.name.c_str()) > 0)
-                    p = rr_rotation(p);
-                else
-                    p = rl_rotation(p);
-            }
-        }else{
-            cout <<"DUPLICATE: " << toAdd.name << endl;
-        }
-        
-        
-    }
-     
-     
-    return p;
-    
-}
-
-
-template <class T>
-void Tree<T>::insertNode(T toAdd) {
-    if (Root == NULL) {
-        Root = new TreeNode<T>(toAdd);
-        Root->Lchild = NULL;
-        Root->Rchild = NULL;
-
-    }
-    else {
-        TreeNode<T>
-        *n = Root,
-        *parent;
-        
-        while (true) {
-            if(toAdd.name == n->data.name)
-                return;
-            
-            parent = n;
-            
-            bool goLeft = strcmp(toAdd.name.c_str(), n->data.name.c_str()) < 0;
-            n = goLeft ? n->Lchild : n->Rchild;
-            
-            if (n == NULL) {
-                if (goLeft) {
-                    parent->Lchild = new TreeNode<T>(toAdd);
-                    parent->Lchild->parent = parent;
-                }
-                else {
-                    parent->Rchild = new TreeNode<T>(toAdd);
-                    parent->Rchild->parent = parent;
-                }
-                balance(parent);
-                break;
-            }
-        }
-    }
-    
-    return;
-}
-
-template <class T>
-void Tree<T>::rebalance(TreeNode<T> *n) {
-    setBalance(n);
-    
-    if (n->balance == -2) {
-        if (height(n->left->left) >= height(n->left->right))
-            n = rotateRight(n);
-        else
-            n = rotateLeftThenRight(n);
-    }
-    else if (n->balance == 2) {
-        if (height(n->right->right) >= height(n->right->left))
-            n = rotateLeft(n);
-        else
-            n = rotateRightThenLeft(n);
-    }
-    
-    if (n->parent != NULL) {
-        rebalance(n->parent);
-    }
-    else {
-        Root = n;
-    }
-}
-
-
-template <class T>
-void Tree<T>::inorder(TreeNode<T> *tree)
-{
-    if (tree == NULL)
-        return;
-    inorder (tree->Lchild);
-    cout <<tree->data.name<<"  ";
-    inorder (tree->Rchild);
-}
-*/
-
-
-
-
-/* AVL class definition */
+/**
+ * Rebalances the given node
+ * @return none
+ * @param *n = node to balance
+**/
 template <class T>
 void AVLtree<T>::rebalance(AVLnode<T> *n) {
-    setBalance(n);
     
-    if (n->balance == -2) {
+    int balance = height(n->right) - height(n->left);
+    
+    if (balance == -2) {
         if (height(n->left->left) >= height(n->left->right))
             n = rotateRight(n);
         else
             n = rotateLeftThenRight(n);
     }
-    else if (n->balance == 2) {
+    else if (balance == 2) {
         if (height(n->right->right) >= height(n->right->left))
             n = rotateLeft(n);
         else
             n = rotateRightThenLeft(n);
     }
     
-    if (n->parent != NULL) {
-        rebalance(n->parent);
-    }
-    else {
+    if (n->parent == NULL)
         root = n;
-    }
+    else
+        rebalance(n->parent);//make sure the parent is balanced, you move up
 }
 
+//rotates left
 template <class T>
 AVLnode<T>* AVLtree<T>::rotateLeft(AVLnode<T> *a) {
     AVLnode<T> *b = a->right;
@@ -364,11 +61,10 @@ AVLnode<T>* AVLtree<T>::rotateLeft(AVLnode<T> *a) {
         }
     }
     
-    setBalance(a);
-    setBalance(b);
     return b;
 }
 
+//rotates right
 template <class T>
 AVLnode<T>* AVLtree<T>::rotateRight(AVLnode<T> *a) {
     AVLnode<T> *b = a->left;
@@ -390,85 +86,77 @@ AVLnode<T>* AVLtree<T>::rotateRight(AVLnode<T> *a) {
         }
     }
     
-    setBalance(a);
-    setBalance(b);
     return b;
 }
-
+//rotates left then right
 template <class T>
 AVLnode<T>* AVLtree<T>::rotateLeftThenRight(AVLnode<T> *n) {
     n->left = rotateLeft(n->left);
     return rotateRight(n);
 }
-
+//rotates right then left
 template <class T>
 AVLnode<T>* AVLtree<T>::rotateRightThenLeft(AVLnode<T> *n) {
     n->right = rotateRight(n->right);
     return rotateLeft(n);
 }
 
+/**
+ * @return the height of the tree
+ * @param *n = node to get height of
+**/
 template <class T>
 int AVLtree<T>::height(AVLnode<T> *n) {
     if (n == NULL)
         return -1;
-    return 1 + std::max(height(n->left), height(n->right));
+    return 1 + max(height(n->left), height(n->right));
 }
 
+//constructor
 template <class T>
-void AVLtree<T>::setBalance(AVLnode<T> *n) {
-    n->balance = height(n->right) - height(n->left);
-}
+AVLtree<T>::AVLtree(){}
 
-template <class T>
-void AVLtree<T>::printBalance(AVLnode<T> *n) {
-    if (n != NULL) {
-        printBalance(n->left);
-        std::cout << n->balance << " ";
-        printBalance(n->right);
-    }
-}
-
-template <class T>
-AVLtree<T>::AVLtree(void) : root(NULL) {}
-
+//deconstructor
 template <class T>
 AVLtree<T>::~AVLtree(void) {
     delete root;
 }
-
+/**
+ * @param key = the key to inser
+ * @return bool if the insert was(n't) successful (false = duplicate)
+**/
 template <class T>
 bool AVLtree<T>::insert(T key) {
-    if (root == NULL) {
+    
+    if (root == NULL) {//if root is null, create it
         root = new AVLnode<T>(key, NULL);
-    }
-    else {
-        AVLnode<T>
-        *n = root,
-        *parent;
+    } else {
+        AVLnode<T> *n = root, *parent;
         
         while (true) {
-            if(key.name == n->key.name)
+            if(key.name == n->key.name)//means this is a duplicate and we should stop (duplicates aren't added, though there won't be any)
                 return false;
             
-            parent = n;
+            parent = n;//start with parent = n then go from there
             
-            bool goLeft = strcmp(key.name.c_str(), n->key.name.c_str()) < 0;
-            n = goLeft ? n->left : n->right;
-            
-            if (n == NULL) {
-                if (goLeft) {
+            if(strcmp(key.name.c_str(), n->key.name.c_str()) < 0){
+                //go left
+                n = n->left;
+                if (n == NULL) {//if next node isn't there, this is where we add the new node
                     parent->left = new AVLnode<T>(key, parent);
+                    rebalance(parent);
+                    break;
                 }
-                else {
+            }else{
+                n = n-> right;
+                if (n == NULL) {
                     parent->right = new AVLnode<T>(key, parent);
+                    rebalance(parent);
+                    break;
                 }
-                
-                rebalance(parent);
-                break;
             }
-        }
-    }
-    
+        }//end while loop
+    }//end 1st else
     return true;
 }
 
@@ -511,7 +199,10 @@ void AVLtree<T>::display(AVLnode<T> *ptr, int level)
     }
 }
 
-/*FROM: http://eli.thegreenplace.net/2009/11/23/visualizing-binary-trees-with-graphviz*/
+/**
+ * The following functions are used to print the tree to a picture.
+ * From: http://eli.thegreenplace.net/2009/11/23/visualizing-binary-trees-with-graphviz
+**/
 
 template <class T>
 void AVLtree<T>::bst_print_dot_null(T key, int nullcount, FILE* stream)
@@ -554,10 +245,9 @@ void AVLtree<T>::print_DOT(FILE* stream)
     fprintf(stream, "}\n");
 }
 
-
+//declare classes/structs to be used with AVLTree
 template class AVLtree<Symptom>;
 template class AVLtree<Disease>;
-
 
 
 
