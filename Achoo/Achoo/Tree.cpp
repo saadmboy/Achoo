@@ -197,6 +197,25 @@ void AVLtree<T>::display(AVLnode<T> *ptr, int level)
 }
 
 /**
+ * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator
+ * Used to read and split the diseases.txt
+ **/
+vector<string> &split(const string &s, char delim, vector<string> &elems){
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+vector<string> split(const string &s, char delim){
+    vector<string> elems;
+    split(s, delim, elems);
+    return elems;
+}
+
+
+/**
  * The following functions are used to print the tree to a picture.
  * From: http://eli.thegreenplace.net/2009/11/23/visualizing-binary-trees-with-graphviz
 **/

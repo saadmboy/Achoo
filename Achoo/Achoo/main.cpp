@@ -16,7 +16,6 @@
 #include <string>
 #include <cctype>
 #include "Tree.h"
-
 #include "Structs.cpp"
 
 
@@ -48,8 +47,9 @@ int main(int argc, const char * argv[]) {
             string toS = "";
             getline(cin, toS);
             AVLnode<Symptom> * search =symptoms->completeSearch(toS, symptoms->root);
+            
             if(search)
-                cout << search->key.disease << endl;
+                cout << search->key.disease->name << endl;
             else
                 cout << toS << " was not found\n";
         }else if(input == "d"){
@@ -72,9 +72,6 @@ int main(int argc, const char * argv[]) {
     
     //diseases->display(diseases->root, 1);
     
-    createPictureFromTree("/Users/Saad/Desktop/diseases.gv", diseases);
-    
-    createPictureFromTree("/Users/Saad/Desktop/symptoms.gv", symptoms);
     
     delete diseases;
     delete symptoms;
@@ -92,7 +89,7 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
         return false;
     
     ifstream in;//declare ifstram object
-    in.open(fileName);//open fhe file
+    in.open("/Users/Saad/Desktop/achoo/achoo/Scraper/diseases.txt");//open fhe file
     
     if(in.fail()){//check to see opening failed
         cout << "Error opening file\n";
@@ -134,24 +131,6 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
     
     cout << "Imported " << dCount << " diseases and " << sCount <<" symptoms in " << float(clock() - t)/CLOCKS_PER_SEC << " seconds\n";
     return true;
-}
-
-/**
- * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator
- * Used to read and split the diseases.txt
-**/
-vector<string> &split(const string &s, char delim, vector<string> &elems){
-    stringstream ss(s);
-    string item;
-    while (getline(ss, item, delim)) {
-        elems.push_back(item);
-    }
-    return elems;
-}
-vector<string> split(const string &s, char delim){
-    vector<string> elems;
-    split(s, delim, elems);
-    return elems;
 }
 
 template <class T>
