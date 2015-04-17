@@ -10,6 +10,18 @@
 
 using namespace std;
 
+
+/**
+ * @return the height of the tree
+ * @param *n = node to get height of
+ **/
+template <class T>
+int AVLtree<T>::height(AVLnode<T> *n) {
+    if (n == NULL)
+        return -1;
+    return 1 + max(height(n->left), height(n->right));
+}
+
 /**
  * Rebalances the given node
  * @return none
@@ -102,32 +114,14 @@ AVLnode<T>* AVLtree<T>::rotateRightThenLeft(AVLnode<T> *n) {
 }
 
 /**
- * @return the height of the tree
- * @param *n = node to get height of
-**/
-template <class T>
-int AVLtree<T>::height(AVLnode<T> *n) {
-    if (n == NULL)
-        return -1;
-    return 1 + max(height(n->left), height(n->right));
-}
-
-//constructor
-template <class T>
-AVLtree<T>::AVLtree(){}
-
-//deconstructor
-template <class T>
-AVLtree<T>::~AVLtree(void) {
-    delete root;
-}
-/**
- * @param key = the key to inser
+ * @param key = the key to insert
  * @return bool if the insert was(n't) successful (false = duplicate)
 **/
 template <class T>
 bool AVLtree<T>::insert(T key) {
     
+    transform(key.name.begin(),key.name.end(), key.name.begin(), ::tolower);
+
     if (root == NULL) {//if root is null, create it
         root = new AVLnode<T>(key, NULL);
     } else {
@@ -161,21 +155,87 @@ bool AVLtree<T>::insert(T key) {
 }
 
 
+template <class T>
+void AVLtree<T>::innerSearch(string s, vector<Search *> * toR, AVLnode<T> *& tree, int currentWordInInput){
+    transform(s.begin(),s.end(), s.begin(), ::tolower);//lowercase the search
+    //inorder traversal
+    
+    stack<AVLnode<T> *> stack;
+    AVLnode<T> *Tmp = root;
+    while(1) {
+        while(Tmp!=NULL) {
+            stack.push(Tmp);
+            Tmp = Tmp->left;
+        }
+        if(stack.empty())
+            return;
+        Tmp = stack.top();stack.pop();
+        
+        Search * search;
+        search = new Search;
+        (*search).disease = Tmp->key.disease;
+        (*search).searchValue = Tmp->key.compare(s);
+        
+       
+        
+        //http://www.cplusplus.com/reference/vector/vector/back/
+        //basically if the user types in 'back pain' and the symptom has back pain in that order, increase the search vlaue
+        if(!(*toR).empty()){
+            if((*toR).back()->numElementInInput == currentWordInInput - 1)//if the last element inserted
+                (*search).searchValue++;
+        }
+        
+        (*search).numElementInInput = currentWordInInput;
+        
+        
+        if((*search).searchValue > 0)
+            (*toR).push_back(search);
+        else
+            delete search;
+        
+        Tmp = Tmp->right;
+    }
+    delete Tmp;
+}
+
+template <class T>
+vector<Search *> * AVLtree<T>::search(string s){
+    vector<Search*> * toR;
+    
+    toR = new vector<Search *>;
+    
+    vector<string> words = Utilities::split(s, ' ');
+    
+    
+    for (int i = 0; i < words.size(); i++) {
+        //cout << words[i] << "\n";
+        innerSearch(words[i], toR, root, i);
+    }
+    
+    return toR;
+}
+
+
+
 /**
  * Recursively searches the tree for the param s
  * @return the node with the key = s
 **/
 template <class T>
 AVLnode<T> * AVLtree<T>::completeSearch(string& s, AVLnode<T> *& tree) {
+    transform(s.begin(),s.end(), s.begin(), ::tolower);//lowercase the search
+    
     if(tree == NULL)
         return NULL;
     
-    if(tolower(*s.c_str()) < tolower(*tree->key.name.c_str()))
+    if(s < tree->key.name)
         return completeSearch(s, tree->left);
-    if(tolower(*s.c_str()) > tolower(*tree->key.name.c_str()))
+    else if(s > (tree->key.name))
         return completeSearch(s, tree->right);
-    else //(if tree->key.name === s)
+    else if ((tree->key.name) == (s))
         return tree;
+    else
+        return NULL;
 }
 
 
@@ -196,23 +256,6 @@ void AVLtree<T>::display(AVLnode<T> *ptr, int level)
     }
 }
 
-/**
- * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator
- * Used to read and split the diseases.txt
- **/
-vector<string> &split(const string &s, char delim, vector<string> &elems){
-    stringstream ss(s);
-    string item;
-    while (getline(ss, item, delim)) {
-        elems.push_back(item);
-    }
-    return elems;
-}
-vector<string> split(const string &s, char delim){
-    vector<string> elems;
-    split(s, delim, elems);
-    return elems;
-}
 
 
 /**
@@ -260,6 +303,26 @@ void AVLtree<T>::print_DOT(FILE* stream)
     
     fprintf(stream, "}\n");
 }
+
+/**
+ * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator
+ * Used to read and split the diseases.txt
+ **
+template <class T>
+vector<string> & AVLtree<T>::split(const string &s, char delim, vector<string> &elems){
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+template <class T>
+vector<string> AVLtree<T>::split(const string &s, char delim){
+    vector<string> elems;
+    split(s, delim, elems);
+    return elems;
+}*/
 
 //declare classes/structs to be used with AVLTree
 template class AVLtree<Symptom>;

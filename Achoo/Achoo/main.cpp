@@ -5,6 +5,7 @@
 //  Created by Saad K on 3/8/15.
 //  Copyright (c) 2015 Saad K. All rights reserved.
 //
+#pragma once
 
 #include <stdio.h>
 #include <time.h>
@@ -15,6 +16,7 @@
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <numeric>
 #include "Tree.h"
 #include "Structs.cpp"
 
@@ -25,8 +27,6 @@ using namespace std;
 bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symptom> * symptomsTree);
 template<class T>
 void createPictureFromTree(char *, AVLtree<T> *);
-vector<string> &split(const string &s, char delim, vector<string> &elems);
-vector<string> split(const string &s, char delim);
 
 int main(int argc, const char * argv[]) {
     AVLtree<Disease> * diseases;//create diseases tree
@@ -35,7 +35,9 @@ int main(int argc, const char * argv[]) {
     symptoms = new AVLtree<Symptom>();
     
     //populates the tree with the contents from the following file
-    loadFromFile("/Users/Saad/Desktop/achoo/Scraper/diseases.txt", diseases, symptoms);
+    loadFromFile("/Users/Saad/Desktop/achoo/achoo/Scraper/diseases.txt", diseases, symptoms);
+    
+    //symptoms->display(symptoms->root, 1);
     
     //temporary menu for debugging
     string input = "";
@@ -46,19 +48,28 @@ int main(int argc, const char * argv[]) {
             cout << "Please type the symptom term: "<<endl;
             string toS = "";
             getline(cin, toS);
-            AVLnode<Symptom> * search =symptoms->completeSearch(toS, symptoms->root);
+            //AVLnode<Symptom> * search =symptoms->completeSearch(toS, symptoms->root);
             
-            if(search)
-                cout << search->key.disease->name << endl;
-            else
-                cout << toS << " was not found\n";
+            vector<Search*> * search;
+            
+            
+            search = symptoms->search(toS);
+            
+            if(search->size() > 1){
+                for (auto s = search->begin(); s != search->end(); s++ ) {
+                    cout << (*s)->disease->name << ":\t" << (*s)->searchValue <<endl;
+                }
+            }else{
+                cout << "Sorry, not found\n";
+            }
+            delete search;
         }else if(input == "d"){
             cout << "Please type the disease term: " <<endl;
             string toS = "";
             getline(cin, toS);
             AVLnode<Disease> * search =diseases->completeSearch(toS, diseases->root);
             if(search){
-                cout << "Found " << toS << " with "<< search->key.symptoms.size() << " symptoms: " << endl;
+                cout << "Found " << search->key.name << " with "<< search->key.symptoms.size() << " symptoms: " << endl;
                 for(Symptom * s: search->key.symptoms)
                     cout << "\t" << s->name<< endl;
             }else{
@@ -70,7 +81,7 @@ int main(int argc, const char * argv[]) {
     }
     
     
-    //diseases->display(diseases->root, 1);
+    
     
     
     delete diseases;
@@ -89,7 +100,7 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
         return false;
     
     ifstream in;//declare ifstram object
-    in.open("/Users/Saad/Desktop/achoo/achoo/Scraper/diseases.txt");//open fhe file
+    in.open(fileName);//open fhe file
     
     if(in.fail()){//check to see opening failed
         cout << "Error opening file\n";
@@ -108,7 +119,7 @@ bool loadFromFile(char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symp
         //FROM: http://stackoverflow.com/questions/236129/split-a-string-in-c
         istringstream iss(temp);
         
-        vector<string> symptoms = split(temp, '\t');
+        vector<string> symptoms = Utilities::split(temp, '\t');
         
         Disease * d;
         d = new Disease;
@@ -140,5 +151,4 @@ void createPictureFromTree(char * address, AVLtree<T> * t){
     t->print_DOT(pFile);
     fclose(pFile);
 }
-
 
