@@ -14,12 +14,22 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <stack>
 
 using namespace std;
+
+struct Disease;
+struct Search;
+struct Symptom;
+
+template <class T>
+class AVLnode;
+
 
 class Utilities{
 public:
     static vector<string> &split(const string &s, char delim, vector<string> &elems);
     static vector<string> split(const string &s, char delim);
+
 };
 #endif /* defined(__Achoo__Utilities__) */

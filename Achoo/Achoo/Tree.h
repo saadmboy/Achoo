@@ -6,6 +6,10 @@
 //  Copyright (c) 2015 Saad K. All rights reserved.
 //
 #pragma once
+#ifndef __Achoo__Tree__
+#define __Achoo__Tree__
+
+
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -15,6 +19,7 @@
 #include <stack>
 #include "Structs.cpp"
 #include "Utilities.h"
+
 using namespace std;
 
 /* AVL node */
@@ -47,7 +52,7 @@ public:
     bool insert(T key);
     void display(AVLnode<T> *, int);
     AVLnode<T> * completeSearch(string&, AVLnode<T> *&);
-    vector<Search *> * search(string );
+    //vector<Search *> * search(string);
     void print_DOT(FILE* stream);
 private:
     AVLnode<T>* rotateLeft (AVLnode<T> *);
@@ -56,7 +61,7 @@ private:
     AVLnode<T>* rotateRightThenLeft (AVLnode<T> *);
     void rebalance (AVLnode<T> *);
     int height (AVLnode<T> *);
-    void innerSearch(string, vector<Search *> *, AVLnode<T> *&, int);
+    //void innerSearch(string, vector<Search *> *, AVLnode<T> *&, int, int);
     
     void preOrder(ostream &out, AVLnode<T>* pre);
     string dot();
@@ -64,6 +69,6 @@ private:
     void bst_print_dot_aux(AVLnode<T>* node, FILE* stream);
 };
 
-
+#endif
 
 

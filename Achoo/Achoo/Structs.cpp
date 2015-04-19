@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Saad K. All rights reserved.
 //
 #pragma once
+#ifndef __Achoo__Structs__
+#define __Achoo__Structs__
 
 #include <vector>
 #include <string>
@@ -15,13 +17,14 @@ using namespace std;
 
 struct Symptom;
 struct Disease;
-struct search;
+struct Search;
+struct isSearch1MoreThanSearch2;
 
 struct Disease{
     string name;
     Disease * disease;//needed for the Tree to compile b/c I'm using templates instead of two separte AVltrees
     vector<Symptom *> symptoms;
-    double compare(string s){//needed for the Tree to compile.
+    double compare(string s, int numberOfWordsInInput){//needed for the Tree to compile.
         return -1.0;
     }
 };
@@ -29,7 +32,10 @@ struct Disease{
 struct Symptom{
     string name;
     Disease *disease;
-    double compare(string s){
+    //compares the symptom with the symptom provided by the user
+    //@return weighted average of words of string / total words provided by user
+    double compare(string s, int numberOfWordsInInput){
+        //s is one word
         double count = 0;
         vector<string> words = Utilities::split(name, ' ');
         for (int i = 0; i < words.size(); i++) {
@@ -37,7 +43,8 @@ struct Symptom{
                 count++;
             }
         }
-        return (double)(count / (double)words.size());
+        //count = number of words in the 
+        return (double)(count / (double)numberOfWordsInInput);
     }
 };
 
@@ -48,4 +55,17 @@ struct Search {
     int numElementInInput;
 };
 
+//http://stackoverflow.com/questions/1380463/sorting-a-vector-of-custom-objects
+//added pointers b/c array returned by Tree.search is a pointer array.
+struct isSearch1MoreThanSearch2
+{
+    inline bool operator() (const Search *struct1 , const Search * struct2 )
+    {
+        return (struct1->searchValue > struct2->searchValue);
+    }
+};
+
+
+
+#endif
 

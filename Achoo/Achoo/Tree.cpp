@@ -155,67 +155,6 @@ bool AVLtree<T>::insert(T key) {
 }
 
 
-template <class T>
-void AVLtree<T>::innerSearch(string s, vector<Search *> * toR, AVLnode<T> *& tree, int currentWordInInput){
-    transform(s.begin(),s.end(), s.begin(), ::tolower);//lowercase the search
-    //inorder traversal
-    
-    stack<AVLnode<T> *> stack;
-    AVLnode<T> *Tmp = root;
-    while(1) {
-        while(Tmp!=NULL) {
-            stack.push(Tmp);
-            Tmp = Tmp->left;
-        }
-        if(stack.empty())
-            return;
-        Tmp = stack.top();stack.pop();
-        
-        Search * search;
-        search = new Search;
-        (*search).disease = Tmp->key.disease;
-        (*search).searchValue = Tmp->key.compare(s);
-        
-       
-        
-        //http://www.cplusplus.com/reference/vector/vector/back/
-        //basically if the user types in 'back pain' and the symptom has back pain in that order, increase the search vlaue
-        if(!(*toR).empty()){
-            if((*toR).back()->numElementInInput == currentWordInInput - 1)//if the last element inserted
-                (*search).searchValue++;
-        }
-        
-        (*search).numElementInInput = currentWordInInput;
-        
-        
-        if((*search).searchValue > 0)
-            (*toR).push_back(search);
-        else
-            delete search;
-        
-        Tmp = Tmp->right;
-    }
-    delete Tmp;
-}
-
-template <class T>
-vector<Search *> * AVLtree<T>::search(string s){
-    vector<Search*> * toR;
-    
-    toR = new vector<Search *>;
-    
-    vector<string> words = Utilities::split(s, ' ');
-    
-    
-    for (int i = 0; i < words.size(); i++) {
-        //cout << words[i] << "\n";
-        innerSearch(words[i], toR, root, i);
-    }
-    
-    return toR;
-}
-
-
 
 /**
  * Recursively searches the tree for the param s
