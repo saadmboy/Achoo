@@ -20,7 +20,8 @@ struct Disease;
 struct Search;
 struct isSearch1MoreThanSearch2;
 
-struct Disease{
+
+struct Disease {
     string name;
     Disease * disease;//needed for the Tree to compile b/c I'm using templates instead of two separte AVltrees
     vector<Symptom *> symptoms;
@@ -29,7 +30,7 @@ struct Disease{
     }
 };
 
-struct Symptom{
+struct Symptom {
     string name;
     Disease *disease;
     //compares the symptom with the symptom provided by the user
@@ -53,6 +54,7 @@ struct Search {
     Disease * disease;
     double searchValue;//search value/percentage
     int numElementInInput;
+    string name;
 };
 
 //http://stackoverflow.com/questions/1380463/sorting-a-vector-of-custom-objects
