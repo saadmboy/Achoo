@@ -25,13 +25,14 @@ using namespace std;
 
 const char * LOCATION_OF_ACHOO_FILE = "/Users/Saad/Desktop/achoo/Scraper/diseases.txt";
 
+//------------Start Method Declarations
 
 bool loadFromFile(const char * fileName, AVLtree<Disease> * diseasesTree, AVLtree<Symptom> * symptomsTree);
-template<class T>
-void createPictureFromTree(char *, AVLtree<T> *);
 void innerSearchTree(AVLnode<Symptom> *& root, string s, vector<Search *> * results, AVLnode<Symptom> *& node, int currentWordInInput, int numberOfWordsInInput);
 vector<Search *> * searchTree(AVLnode<Symptom> *& root, string usersSearchQuery);
 vector<Search *> * searchVector(vector<Search *> *, string);
+
+//------------End Method Declarations
 
 int main(int argc, const char * argv[]) {
     AVLtree<Disease> * diseases;//create diseases tree
@@ -42,7 +43,7 @@ int main(int argc, const char * argv[]) {
     //populates the tree with the contents from the following file
     loadFromFile(LOCATION_OF_ACHOO_FILE, diseases, symptoms);
     
-    //symptoms->display(symptoms->root, 1);
+    
     
     //temporary menu for debugging
     string input = "";
@@ -63,18 +64,18 @@ int main(int argc, const char * argv[]) {
                 //http://stackoverflow.com/questions/1380463/sorting-a-vector-of-custom-objects
                 sort(searchResults->begin(), searchResults->end(), isSearch1MoreThanSearch2());
                 
-                //for (auto s = searchResults->begin(); s != searchResults->end(); s++ ) {
-                    //cout << (*s)->disease->name << ":\t" << (*s)->searchValue <<endl;
-                //}
+                for (auto s = searchResults->begin(); s != searchResults->end(); s++ ) {
+                    cout << (*s)->disease->name << ":\t" << (*s)->searchValue <<endl;
+                }
                 cout << "Found " << searchResults->size()  << " symptoms\n\n\n\n\n\n\n\n\n\n";
-                char areThereMoreSymptoms = 'y';
-                while (areThereMoreSymptoms == 'y' && searchResults->size() > 1) {
+                string areThereMoreSymptoms = "y";
+                while (areThereMoreSymptoms == "y" && searchResults->size() > 1) {
                     cout << "Do you have any other symptoms? (y or n) "<<endl;
-                    cin >> areThereMoreSymptoms;
-                    if(areThereMoreSymptoms == 'y'){
+                    getline(cin,areThereMoreSymptoms);//woud use cin >> but cin and getline don't play well togetehr
+                    if(areThereMoreSymptoms == "y"){
                         cout << "Please type in your next symptom: " <<endl;
                         string newSymp = "";
-                        cin >> newSymp;
+                        getline(cin, newSymp);
                         
                         searchResults = searchVector(searchResults, newSymp);
                         cout << "Found " << searchResults->size()  << "\n";
@@ -172,15 +173,6 @@ bool loadFromFile(const char * fileName, AVLtree<Disease> * diseasesTree, AVLtre
     return true;
 }
 
-template <class T>
-void createPictureFromTree(char * address, AVLtree<T> * t){
-    FILE * pFile;
-    pFile = fopen ("/Users/Saad/Desktop/diseases.gv" , "w+");
-    t->print_DOT(pFile);
-    fclose(pFile);
-}
-
-
 //searches all symptoms for one word
 //template <class T>
 void innerSearchTree(AVLnode<Symptom> *& root, string s, vector<Search *> * results, AVLnode<Symptom> *& node, int currentWordInInput, int numberOfWordsInInput){
@@ -191,7 +183,7 @@ void innerSearchTree(AVLnode<Symptom> *& root, string s, vector<Search *> * resu
     stack<AVLnode<Symptom> *> stack;
     AVLnode<Symptom> *Tmp = root;
     while(1) {
-        while(Tmp!=NULL) {
+        while(Tmp != NULL) {
             stack.push(Tmp);
             Tmp = Tmp->left;
         }
@@ -203,8 +195,6 @@ void innerSearchTree(AVLnode<Symptom> *& root, string s, vector<Search *> * resu
         search = new Search;
         (*search).disease = Tmp->key.disease;
         (*search).searchValue = Tmp->key.compare(s, numberOfWordsInInput);
-        
-        
         
         //http://www.cplusplus.com/reference/vector/vector/back/
         //basically if the user types in 'back pain' and the symptom has back pain in that order, increase the search vlaue
@@ -228,14 +218,10 @@ void innerSearchTree(AVLnode<Symptom> *& root, string s, vector<Search *> * resu
 
 vector<Search *> * searchTree(AVLnode<Symptom> *& root, string usersSearchQuery){
     vector<Search*> * toR;
-    
     toR = new vector<Search *>;
     
     vector<string> wordsInQuery = Utilities::split(usersSearchQuery, ' ');
-    
-    
-    for (int i = 0; i < wordsInQuery.size(); i++) {
-        //cout << words[i] << "\n";
+    for (int i = 0; i < wordsInQuery.size(); i++) {//search the tree for each word in the users query
         innerSearchTree(root, wordsInQuery[i], toR, root, i, wordsInQuery.size());
     }
     
@@ -244,30 +230,37 @@ vector<Search *> * searchTree(AVLnode<Symptom> *& root, string usersSearchQuery)
 
 
 vector<Search *> * searchVector(vector<Search *> * originalResults, string newSymp){
+    transform(newSymp.begin(),newSymp.end(), newSymp.begin(), ::tolower);//lowercase the search
+
     vector<Search *> *  toReturn;
     toReturn = new vector<Search *>;
     
     vector<string> wordsInQuery = Utilities::split(newSymp, ' ');
     
     
-    for (auto s = originalResults->begin(); s != originalResults->end(); s++ ) {
+    for (auto s = originalResults->begin(); s != originalResults->end(); s++ ) {//go through each originalResult
+        
+        Search * search;
+        search = new Search;
+        (*search).disease = (*s)->disease;
+        (*search).searchValue = (*s)->searchValue;
         for (int i = 0; i < wordsInQuery.size(); i++) {
             for (int z = 0; z < (*s)->disease->symptoms.size(); z++) {
-                Search * search;
-                search = new Search;
-                (*search).disease = (*s)->disease;
-                (*search).searchValue = (*s)->disease->symptoms[z]->compare(newSymp, wordsInQuery.size());
+                double compareResult = (*s)->disease->symptoms[z]->compare(newSymp, wordsInQuery.size());
+                (*search).searchValue += compareResult;
                 (*search).numElementInInput = i;
                 if(!(*toReturn).empty()){
                     if((*toReturn).back()->numElementInInput == i - 1)//if the last element inserted
                         (*search).searchValue++;
                 }
-                
-                if((*search).searchValue > 0)
-                    (*toReturn).push_back(search);
-                else
-                    delete search;
+                if(compareResult > 0)
+                    break;
             }
+        }
+        if((*search).searchValue > (*s)->searchValue){//only add the old result if it has the new symptom too
+            (*toReturn).push_back(search);
+        }else{
+            delete search;
         }
     }
     delete originalResults;

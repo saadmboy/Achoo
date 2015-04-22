@@ -18,14 +18,6 @@
 
 using namespace std;
 
-struct Disease;
-struct Search;
-struct Symptom;
-
-template <class T>
-class AVLnode;
-
-
 class Utilities{
 public:
     static vector<string> &split(const string &s, char delim, vector<string> &elems);

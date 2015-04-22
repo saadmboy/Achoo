@@ -52,7 +52,6 @@ public:
     bool insert(T key);
     void display(AVLnode<T> *, int);
     AVLnode<T> * completeSearch(string&, AVLnode<T> *&);
-    //vector<Search *> * search(string);
     void print_DOT(FILE* stream);
 private:
     AVLnode<T>* rotateLeft (AVLnode<T> *);
@@ -61,12 +60,12 @@ private:
     AVLnode<T>* rotateRightThenLeft (AVLnode<T> *);
     void rebalance (AVLnode<T> *);
     int height (AVLnode<T> *);
-    //void innerSearch(string, vector<Search *> *, AVLnode<T> *&, int, int);
     
     void preOrder(ostream &out, AVLnode<T>* pre);
     string dot();
     void bst_print_dot_null(T key, int nullcount, FILE* stream);
     void bst_print_dot_aux(AVLnode<T>* node, FILE* stream);
+    void createPictureFromTree(char * address);
 };
 
 #endif

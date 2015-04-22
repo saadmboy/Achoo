@@ -158,6 +158,7 @@ bool AVLtree<T>::insert(T key) {
 
 /**
  * Recursively searches the tree for the param s
+ * This searches for the exact word
  * @return the node with the key = s
 **/
 template <class T>
@@ -177,22 +178,21 @@ AVLnode<T> * AVLtree<T>::completeSearch(string& s, AVLnode<T> *& tree) {
         return NULL;
 }
 
-
+/**
+ * Recursively prints the tree
+**/
 template <class T>
-void AVLtree<T>::display(AVLnode<T> *ptr, int level)
-{
-    int i;
-    if (ptr!=NULL)
-    {
-        display(ptr->right, level + 1);
-        printf("\n");
-        if (ptr == root)
-            cout<<"Root -> ";
-        for (i = 0; i < level && ptr !=root; i++)
-            cout<<"        ";
-        cout<< ptr->key.name;
-        display(ptr->left, level + 1);
-    }
+void AVLtree<T>::display(AVLnode<T> *node, int level) {
+    if (node != NULL)
+        return;
+    display(node->right, level + 1);//prints the right side first
+    cout << "\n";
+    if (node == root)
+        cout << "Root: ";
+    for (int i = 0; i < level && node !=root; i++)
+        cout << "\t";
+    cout<< node->key.name;
+    display(node->left, level + 1);
 }
 
 
@@ -243,25 +243,13 @@ void AVLtree<T>::print_DOT(FILE* stream)
     fprintf(stream, "}\n");
 }
 
-/**
- * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator
- * Used to read and split the diseases.txt
- **
 template <class T>
-vector<string> & AVLtree<T>::split(const string &s, char delim, vector<string> &elems){
-    stringstream ss(s);
-    string item;
-    while (getline(ss, item, delim)) {
-        elems.push_back(item);
-    }
-    return elems;
+void AVLtree<T>::createPictureFromTree(char * address){
+    FILE * pFile;
+    pFile = fopen (address , "w+");
+    print_DOT(pFile);
+    fclose(pFile);
 }
-template <class T>
-vector<string> AVLtree<T>::split(const string &s, char delim){
-    vector<string> elems;
-    split(s, delim, elems);
-    return elems;
-}*/
 
 //declare classes/structs to be used with AVLTree
 template class AVLtree<Symptom>;
