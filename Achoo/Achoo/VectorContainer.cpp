@@ -10,6 +10,12 @@
 
 using namespace std;
 
+
+template <class T>
+int VectorContainer<T>::size(){
+    return innerVector->size();
+}
+
 template <class T>
 bool VectorContainer<T>::insert(T toAdd){
     
@@ -20,8 +26,10 @@ bool VectorContainer<T>::insert(T toAdd){
 }
 
 template <class T>
-int VectorContainer<T>::size(){
-    return innerVector->size();
+T VectorContainer<T>::get(int index){
+    if(index > size() || index < 0)
+        return NULL;
+    return (*innerVector)[index];
 }
 
 template <class T>
@@ -35,14 +43,10 @@ T VectorContainer<T>::completeSearch(string toSearch){
     return NULL;
 }
 
-template <class T>
-T VectorContainer<T>::get(int index){
-    if(index > size() || index < 0)
-        return NULL;
-    return (*innerVector)[index];
-}
 
-
+/**
+ * Initially goes through a disease vector and finds and matches to the users given symptom
+**/
 template <class T>
 VectorContainer<Search *> * VectorContainer<T>::initialSearchVector(VectorContainer<Disease *> * diseases, string toSearch){
     VectorContainer<Search *> * toReturn;
@@ -81,6 +85,9 @@ VectorContainer<Search *> * VectorContainer<T>::initialSearchVector(VectorContai
     return toReturn;
 }
 
+/**
+ * Searches a vector containing search objects. Used to narrow down the search
+**/
 template <class T>
 VectorContainer<Search *> * VectorContainer<T>::searchSearchVector(VectorContainer<Search *> * originalResults, string newSymp){
     VectorContainer<Search *> * toReturn;
@@ -121,7 +128,7 @@ VectorContainer<Search *> * VectorContainer<T>::searchSearchVector(VectorContain
     return toReturn;
 }
 
-
+//allow the VectorContainer to be used with Symptom *, Disease * and Search *
 template class VectorContainer<Symptom *>;
 template class VectorContainer<Disease *>;
 template class VectorContainer<Search *>;
