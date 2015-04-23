@@ -17,7 +17,6 @@
 #include <string>
 #include <cctype>
 #include <numeric>
-//#include "Tree.h"
 #include "Structs.cpp"
 #include "VectorContainer.h"
 
@@ -31,6 +30,7 @@ const char * LOCATION_OF_ACHOO_FILE = "/Users/Saad/Desktop/achoo/Scraper/disease
 bool loadFromFile(const char * fileName, VectorContainer<Disease *> * diseases, VectorContainer<Symptom *> * symptoms);
 void manageMainMenu(VectorContainer<Disease *> *, VectorContainer<Symptom *> *);
 void manageAdditionalSearch(VectorContainer<Search *> * initialSearchResults);
+
 //------------End Method Declarations
 
 int main(int argc, const char * argv[]) {
@@ -47,8 +47,11 @@ int main(int argc, const char * argv[]) {
     manageMainMenu(diseases, symptoms);
     
     
+    
     delete diseases;
     delete symptoms;
+    
+    
     return 0;
 }
 
@@ -124,7 +127,7 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
             searchResults = searchResults->initialSearchVector(diseases, toS);
             
             if(searchResults->size() == 1){//rarely the case.
-                cout << "It seems that you have " << searchResults->get(0)->name << " with the following sympyoms: \n";
+                cout << "It seems that you have " << searchResults->get(0)->disease->name << " with the following sympyoms: \n";
                 for (auto s = searchResults->get(0)->disease->symptoms.begin(); s != searchResults->get(0)->disease->symptoms.end(); s++ ) {
                     cout << "\t" << (*s)->name <<"\n";
                 }
@@ -134,7 +137,7 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
                 cout << "Sorry, no diseases found with that search term.\n";
             }
             
-            delete searchResults;
+            //delete searchResults;
         }else if(input == "d"){
             
             //no memory leaks here tested by searching 1 diseas 50 times
@@ -151,6 +154,7 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
             }else{
                 cout << toS << " was not found\n";
             }
+        }else if(input == "q"){
         }else{
             cout << "invalid command\n";
         }
@@ -195,7 +199,7 @@ void manageAdditionalSearch(VectorContainer<Search *> * searchResults){
         }
         
         if(searchResults->get(0) != NULL){
-            cout << "It seems that you have " << searchResults->get(0)->name << " with the following sympyoms: \n";
+            cout << "It seems that you have " << searchResults->get(0)->disease->name << " with the following sympyoms: \n";
             
             for (auto s = searchResults->get(0)->disease->symptoms.begin(); s != searchResults->get(0)->disease->symptoms.end(); s++ ) {
                 cout << "\t" << (*s)->name <<"\n";

@@ -22,6 +22,11 @@ struct isSearch1MoreThanSearch2;
 
 
 struct Disease {
+    ~Disease(){
+        for(int i = 0; i < symptoms.size(); i++)
+            delete symptoms[i];
+        delete disease;
+    }
     string name;
     Disease * disease;//needed for the Tree to compile b/c I'm using templates instead of two separte AVltrees
     vector<Symptom *> symptoms;
