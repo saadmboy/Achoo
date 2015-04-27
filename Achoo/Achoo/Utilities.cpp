@@ -8,9 +8,7 @@
 #pragma once
 #include "Utilities.h"
 
-
 using namespace std;
-
 
 /**
  * The following functions are from http://stackoverflow.com/questions/236129/split-a-string-in-c and basically help split a string with a deliminator

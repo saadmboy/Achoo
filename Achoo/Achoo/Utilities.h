@@ -18,6 +18,7 @@
 
 using namespace std;
 
+//separate class b/c code is reused in each of the other classes.
 class Utilities{
 public:
     static vector<string> &split(const string &s, char delim, vector<string> &elems);

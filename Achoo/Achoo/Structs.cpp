@@ -54,7 +54,6 @@ struct Symptom {
     }
 };
 
-//template <class T>
 struct Search {
     Disease * disease;
     double searchValue;//search value/percentage

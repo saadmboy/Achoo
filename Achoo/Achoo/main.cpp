@@ -23,7 +23,7 @@
 using namespace std;
 
 
-const char * LOCATION_OF_ACHOO_FILE = "/Users/Saad/Desktop/achoo/Scraper/diseases.txt";
+//const char * LOCATION_OF_ACHOO_FILE = "/Users/Saad/Desktop/achoo/Scraper//diseases.txt";
 
 //------------Start Method Declarations
 
@@ -34,10 +34,26 @@ void manageAdditionalSearch(VectorContainer<Search *> * initialSearchResults);
 //------------End Method Declarations
 
 int main(int argc, const char * argv[]) {
+
+    cout << "       _        _" <<endl;
+    cout << "      / \\   ___| |__   ___   ___" << endl;
+    cout << "     / _ \\ / __| '_ \\ / _ \\ / _ \\" <<endl;
+    cout << "    / ___ \\ (__| | | | (_) | (_) |" <<endl;
+    cout << "   /_/   \\_\\___|_| |_|\\___/ \\___/ v1.0" <<endl;
+
+    
     VectorContainer<Disease *> * diseases = new VectorContainer<Disease *>;
     VectorContainer<Symptom *> * symptoms = new VectorContainer<Symptom *>;
     
-    //populates the tree with the contents from the following file
+    char * LOCATION_OF_ACHOO_FILE = "";
+    
+    
+    string temp = "";
+    cout << "Please type in the directory of the diseases.txt file (Please make sure to escape the / with //): ";
+    getline(cin, temp);
+    LOCATION_OF_ACHOO_FILE=new char[strlen(temp.c_str())+1];
+    strcpy(LOCATION_OF_ACHOO_FILE, temp.c_str());
+    
     if(!loadFromFile(LOCATION_OF_ACHOO_FILE, diseases, symptoms)){
         cout << "Unable to load the file\nExiting now...";
         return 1;//non successful execution
@@ -131,6 +147,7 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
                 for (auto s = searchResults->get(0)->disease->symptoms.begin(); s != searchResults->get(0)->disease->symptoms.end(); s++ ) {
                     cout << "\t" << (*s)->name <<"\n";
                 }
+                cout << "\n\n";
             }else if(searchResults->size() > 0){//most likely scenarios
                 manageAdditionalSearch(searchResults);//need to narrow down more
             }else{
@@ -194,7 +211,7 @@ void manageAdditionalSearch(VectorContainer<Search *> * searchResults){
         cout << "Sorry no diseases found with those symptoms\n";
     }else if(searchResults->size() == 1){//Possibility 2: Ideal scenario, clear diagnosos.
         
-        for (auto s = searchResults->innerVector->begin(); s != searchResults->innerVector->end(); s++ ) {
+        for (auto s = searchResults->getBeginningIterator(); s != searchResults->getEndingIterator(); s++ ) {
             cout << (*s)->disease->name << ":\t" << (*s)->searchValue <<endl;
         }
         
@@ -204,6 +221,7 @@ void manageAdditionalSearch(VectorContainer<Search *> * searchResults){
             for (auto s = searchResults->get(0)->disease->symptoms.begin(); s != searchResults->get(0)->disease->symptoms.end(); s++ ) {
                 cout << "\t" << (*s)->name <<"\n";
             }
+            cout << "\n\n";
         }else{
             cout << "An error occured\n";
         }
@@ -211,7 +229,7 @@ void manageAdditionalSearch(VectorContainer<Search *> * searchResults){
         cout << "I will now print out some symptoms from potential diseases you might have. These symptoms are in order of which seems most similiar to your given symptoms. If you think you have the majority of the symptoms, press y, if not press n to move on\n\n";
         
         //sort the vector based on the search value
-        sort(searchResults->innerVector->begin(), searchResults->innerVector->end(), isSearch1MoreThanSearch2());
+        sort(searchResults->getBeginningIterator(), searchResults->getEndingIterator(), isSearch1MoreThanSearch2());
         
         //go through and ask the user if he has the following symptoms (that match the disease in the searchResults)
         string isThisIt = "n";
@@ -230,7 +248,7 @@ void manageAdditionalSearch(VectorContainer<Search *> * searchResults){
         }
         
         if(isThisIt == "y" && currIndex < searchResults->size()){
-            cout << "\n\nIt seems that you have " << searchResults->get(currIndex)->disease->name << "\n";
+            cout << "\n\nIt seems that you have " << searchResults->get(currIndex)->disease->name << "\n\n\n";
         }else{
             cout << "Sorry, unfortunately we were unable to diagnose your symptoms\n";
         }
@@ -241,5 +259,6 @@ void manageAdditionalSearch(VectorContainer<Search *> * searchResults){
 //----------Credits:
 //http://stackoverflow.com/questions/1380463/sorting-a-vector-of-custom-objects
 //http://stackoverflow.com/questions/236129/split-a-string-in-c
+//http://stackoverflow.com/questions/4108313/how-do-i-find-the-length-of-an-array
 
 

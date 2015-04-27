@@ -17,6 +17,9 @@
 
 template <class T>
 class VectorContainer{
+private:
+    vector<T> * innerVector;//this vector can contain Search, Disease and Symptom objects
+    bool isValid(string);
 public:
     VectorContainer(){
         innerVector = new vector<T>;
@@ -24,13 +27,15 @@ public:
     ~VectorContainer(){
         delete innerVector;
     }
+    typename vector<T>::iterator getEndingIterator();
+    typename vector<T>::iterator getBeginningIterator();
+    T getBack();
     bool insert(T );
-    vector<T> * innerVector;//this vector can contain Search, Disease and Symptom objects
-    VectorContainer<Search *> * initialSearchVector(VectorContainer<Disease *> *, string);
-    VectorContainer<Search *> * searchSearchVector(VectorContainer<Search *> *, string);
     int size();
     T completeSearch(string);
     T get(int );
+    VectorContainer<Search *> * initialSearchVector(VectorContainer<Disease *> *, string);
+    VectorContainer<Search *> * searchSearchVector(VectorContainer<Search *> *, string);
 };
 
 #endif /* defined(__Achoo__VectorContainer__) */
