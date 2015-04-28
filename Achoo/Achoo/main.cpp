@@ -23,7 +23,7 @@
 using namespace std;
 
 
-//const char * LOCATION_OF_ACHOO_FILE = "/Users/Saad/Desktop/achoo/Scraper//diseases.txt";
+//const char * LOCATION_OF_ACHOO_FILE = "/Users/Saad/Desktop/achoo/Scraper/diseases.txt";
 
 //------------Start Method Declarations
 
@@ -132,10 +132,10 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
     //temporary menu for debugging
     string input = "";
     while (input != "q") {
-        cout << "q to quit\ns to search symptoms\nd to search diseases\n";
+        cout << "Please type\n\ts to start diagnosing\n\td to get symptoms of a specific disease\n\tq to quit\n";
         getline(cin,input);
-        if(input == "s"){
-            cout << "Please type the symptom term: "<<endl;
+        if(input == "s" || input == "S"){
+            cout << "Please start by typing your first symptom: "<<endl;
             string toS = "";
             getline(cin, toS);
             
@@ -155,11 +155,9 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
             }
             
             //delete searchResults;
-        }else if(input == "d"){
+        }else if(input == "d" || input == "D"){
             
-            //no memory leaks here tested by searching 1 diseas 50 times
-            
-            cout << "Please type the disease term: " <<endl;
+            cout << "Please type the disease name: " <<endl;
             string toS = "";
             getline(cin, toS);
             
@@ -171,7 +169,8 @@ void manageMainMenu(VectorContainer<Disease *> * diseases, VectorContainer<Sympt
             }else{
                 cout << toS << " was not found\n";
             }
-        }else if(input == "q"){
+        }else if(input == "q" || input =="Q"){
+            break;
         }else{
             cout << "invalid command\n";
         }
